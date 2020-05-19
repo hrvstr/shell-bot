@@ -159,7 +159,8 @@ bot.command("start", function (msg, reply, next) {
 
 bot.command("help", function (msg, reply, next) {
   reply.html(
-    "‣ Use /cancel to send SIGINT (Ctrl+C) to the process group, or the signal you choose.\n" +
+    "<b>Commands:</b> \n" +
+    "/cancel to send SIGINT (Ctrl+C) to the process group, or the signal you choose.\n" +
     "‣ Use /kill to send SIGTERM to the root process, or the signal you choose.\n" + 
     "You can see the current status and settings for this chat with /status."
   );
@@ -174,9 +175,6 @@ bot.command("process", function (msg, reply, next) {
     var command = msg.context.command;
     return reply.text("A command is already running.");
   }
-
-  if (msg.editor) msg.editor.detach();
-  msg.editor = null;
   
   var args = "process";
   msg.context.command = new Command(reply, msg.context, args);
@@ -192,9 +190,6 @@ bot.command("upload", function (msg, reply, next) {
     var command = msg.context.command;
     return reply.text("A command is already running.");
   }
-
-  if (msg.editor) msg.editor.detach();
-  msg.editor = null;
   
   var args = "upload";
   msg.context.command = new Command(reply, msg.context, args);
@@ -210,9 +205,6 @@ bot.command("list", function (msg, reply, next) {
     var command = msg.context.command;
     return reply.text("A command is already running.");
   }
-
-  if (msg.editor) msg.editor.detach();
-  msg.editor = null;
   
   var args = "list";
   msg.context.command = new Command(reply, msg.context, args);
@@ -228,9 +220,6 @@ bot.command("clear", function (msg, reply, next) {
     var command = msg.context.command;
     return reply.text("A command is already running.");
   }
-
-  if (msg.editor) msg.editor.detach();
-  msg.editor = null;
   
   var args = "clear-incomming";
   msg.context.command = new Command(reply, msg.context, args);
@@ -246,9 +235,6 @@ bot.command("permissions", function (msg, reply, next) {
     var command = msg.context.command;
     return reply.text("A command is already running.");
   }
-
-  if (msg.editor) msg.editor.detach();
-  msg.editor = null;
   
   var args = "fix-permissions";
   msg.context.command = new Command(reply, msg.context, args);
@@ -257,8 +243,22 @@ bot.command("permissions", function (msg, reply, next) {
   });
 });
 
-// INVALID CMD
+// Test Command
+bot.command("test", function (msg, reply, next) {
 
+  if (msg.context.command) {
+    var command = msg.context.command;
+    return reply.text("A command is already running.");
+  }
+  
+  var args = "echo TEST123";
+  msg.context.command = new Command(reply, msg.context, args);
+  msg.context.command.on("exit", function() {
+    msg.context.command = null;
+  });
+});
+
+// INVALID CMD
 bot.command(function (msg, reply, next) {
   reply.reply(msg).text("Invalid command.");
 });
