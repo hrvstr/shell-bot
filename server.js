@@ -502,10 +502,10 @@ bot.command("help", function (msg, reply, next) {
 });
 
 // Command start
-bot.command("irc", function (msg, reply, next) {
+bot.command("get", function (msg, reply, next) {
   var args = msg.args();
   if (!args)
-    return reply.html("Use /irc &lt;command&gt; to run commands in WeeChat.");
+    return reply.html("Use /irc &lt;BOT&gt; &lt;PACK&gt; to download files.");
 
   if (msg.context.command) {
     var command = msg.context.command;
