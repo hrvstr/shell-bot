@@ -56,7 +56,7 @@ function Command(reply, context, command) {
   //FIXME: take additional steps to reduce messages sent to group. do typing actions count?
 
   // Post initial message
-  this.initialMessage = new utils.EditedMessage(reply, this._renderInitial(), "HTML");
+  // this.initialMessage = new utils.EditedMessage(reply, this._renderInitial(), "HTML");
 
   // Process command output
   this.pty.on("data", this._ptyData.bind(this));
@@ -72,7 +72,7 @@ Command.prototype._renderInitial = function _renderInitial() {
     content += "<strong>" + escapeHtml(title) + "</strong>\n";
     content += badges + "<strong>$</strong> " + escapeHtml(this.command);
   } else {
-    content += badges + "<strong>$ " + escapeHtml(this.command) + "</strong>";
+    content += badges + "<strong>" + escapeHtml(this.command) + "</strong>";
   }
   return content;
 }
@@ -86,7 +86,7 @@ Command.prototype._ptyData = function _ptyData(chunk) {
 };
 
 Command.prototype._update = function _update() {
-  this.initialMessage.edit(this._renderInitial());
+  // this.initialMessage.edit(this._renderInitial());
   this.renderer.update();
 };
 
@@ -138,9 +138,7 @@ Command.prototype._exit = function _exit(code, signal) {
   } else {
     if (signal)
       this.reply.html("\uD83D\uDC80 <strong>Killed</strong> by %s.", utils.formatSignal(signal));
-    else if (code === 0)
-      this.reply.html("\u2705 <strong>Exited</strong> correctly.");
-    else
+    else if (code !== 0)
       this.reply.html("\u26D4 <strong>Exited</strong> with %s.", code);
   }
 
