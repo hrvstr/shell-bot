@@ -5,7 +5,7 @@
   "merge_logs": true,
   "vizion": true,
   "autorestart": true,
-  "watch": false,
+  "watch": true,
   "instance_var": "NODE_APP_INSTANCE",
   "pmx": true,
   "automation": true,
