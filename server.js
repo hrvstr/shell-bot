@@ -515,7 +515,7 @@ bot.command("get", function (msg, reply, next) {
   if (msg.editor) msg.editor.detach();
   msg.editor = null;
 
-  var args = "echo '/xdccq add " + msg.args() + "' | inwee -b irc.server.Abjects";
+  var args = "weeget " + msg.args();
   console.log("Chat «%s»: running WeeChat command «%s»", msg.chat.name, args);
   msg.context.command = new Command(reply, msg.context, args);
   msg.context.command.on("exit", function() {

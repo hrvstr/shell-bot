@@ -1,6 +1,6 @@
 {
   "script": "server.js",
-  "name": "telegram_bot",
+  "name": "kodi",
   "env": {},
   "merge_logs": true,
   "vizion": true,
