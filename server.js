@@ -229,49 +229,49 @@ bot.command("keypad", function (msg, reply, next) {
 });
 
 // File upload / download
-bot.command("upload", function (msg, reply, next) {
-  var args = msg.args();
-  if (!args)
-    return reply.html("Use /upload &lt;file&gt; and I'll send it to you");
+// bot.command("upload", function (msg, reply, next) {
+//   var args = msg.args();
+//   if (!args)
+//     return reply.html("Use /upload &lt;file&gt; and I'll send it to you");
 
-  var file = path.resolve(msg.context.cwd, args);
-  try {
-    var stream = fs.createReadStream(file);
-  } catch (e) {
-    return reply.html("Couldn't open file: %s", e.message);
-  }
+//   var file = path.resolve(msg.context.cwd, args);
+//   try {
+//     var stream = fs.createReadStream(file);
+//   } catch (e) {
+//     return reply.html("Couldn't open file: %s", e.message);
+//   }
 
   // Catch errors but do nothing, they'll be propagated to the handler below
-  stream.on("error", function (e) {});
+//   stream.on("error", function (e) {});
 
-  reply.action("upload_document").document(stream).then(function (e, msg) {
-    if (e)
-      return reply.html("Couldn't send file: %s", e.message);
-    fileUploads[msg.id] = file;
-  });
-});
-function handleDownload(msg, reply) {
-  if (Object.hasOwnProperty.call(fileUploads, msg.reply.id))
-    var file = fileUploads[msg.reply.id];
-  else if (msg.context.lastDirMessageId == msg.reply.id)
-    var file = path.join(msg.context.cwd, msg.filename || utils.constructFilename(msg));
-  else
-    return;
+//   reply.action("upload_document").document(stream).then(function (e, msg) {
+//     if (e)
+//       return reply.html("Couldn't send file: %s", e.message);
+//     fileUploads[msg.id] = file;
+//   });
+// });
+// function handleDownload(msg, reply) {
+//   if (Object.hasOwnProperty.call(fileUploads, msg.reply.id))
+//     var file = fileUploads[msg.reply.id];
+//   else if (msg.context.lastDirMessageId == msg.reply.id)
+//     var file = path.join(msg.context.cwd, msg.filename || utils.constructFilename(msg));
+//   else
+//     return;
 
-  try {
-    var stream = fs.createWriteStream(file);
-  } catch (e) {
-    return reply.html("Couldn't write file: %s", e.message);
-  }
-  bot.fileStream(msg.file, function (err, ostream) {
-    if (err) throw err;
-    reply.action("typing");
-    ostream.pipe(stream);
-    ostream.on("end", function () {
-      reply.html("File written: %s", file);
-    });
-  });
-}
+//   try {
+//     var stream = fs.createWriteStream(file);
+//   } catch (e) {
+//     return reply.html("Couldn't write file: %s", e.message);
+//   }
+//   bot.fileStream(msg.file, function (err, ostream) {
+//     if (err) throw err;
+//     reply.action("typing");
+//     ostream.pipe(stream);
+//     ostream.on("end", function () {
+//       reply.html("File written: %s", file);
+//     });
+//   });
+// }
 
 // Status
 bot.command("status", function (msg, reply, next) {
