@@ -468,7 +468,7 @@ bot.command("start", function (msg, reply, next) {
   if (msg.args() && msg.context.id === owner && Object.hasOwnProperty.call(tokens, msg.args())) {
     reply.html("You were already authenticated; the token has been revoked.");
   } else {
-    reply.html("Welcome! Use /run to execute commands, and reply to my messages to send input. /help for more info.");
+    reply.html("👋 Salam aleikum habibi");
   }
 });
 
