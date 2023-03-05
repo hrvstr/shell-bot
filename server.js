@@ -19,7 +19,6 @@ try {
 }
 
 var bot = botgram(config.authToken, { agent: utils.createAgent() });
-var owner = config.owner;
 var contexts = {};
 var defaultCwd = process.env.HOME || process.cwd();
 
@@ -35,7 +34,6 @@ function rootHook(msg, reply, next) {
   if (msg.queued) return;
 
   var id = msg.chat.id;
-  var allowed = id === owner;
 
   if (!contexts[id])
     contexts[id] = {
@@ -56,9 +54,59 @@ function rootHook(msg, reply, next) {
 bot.all(rootHook);
 bot.edited.all(rootHook);
 
-bot.command("r", function (msg, reply, next) {
-  msg.command = msg.context.command ? "enter" : "run";
-  next();
+// Welcome message
+bot.command("start", function (msg, reply) {
+  reply.html("👋 Salam aleikum habibi");
+});
+
+// Commands
+const commands = [
+  { name: "process" },
+  { name: "upload" },
+  { name: "list" },
+  { name: "new", binary: "/home/dietpi/commands/jellyget" },
+  { name: "scan", binary: "/home/dietpi/commands/scan" },
+  {
+    name: "url",
+    binary: "/home/dietpi/.local/bin/yt-dlp --get-url",
+    arg: true,
+    help: "Use /url &lt;URL&gt; to convert a URL.",
+  },
+  {
+    name: "add",
+    binary: "whitelist",
+    arg: true,
+    help: "Use /add &lt;TITLE&gt; to whitelist shows.",
+  },
+  {
+    name: "get",
+    binary: "weeget",
+    arg: true,
+    help: "Use /get &lt;BOT&gt; &lt;PACK&gt; to download files.",
+  },
+];
+
+commands.forEach((command) => {
+  bot.command(command.name, (msg, reply, next) => {
+    // Check if is needed and display help
+    if (command.help && !msg.args()) return reply.html(command.help);
+
+    // Check if command is already running
+    if (msg.context.command) return reply.text("A command is already running.");
+
+    // Construct command
+    let binary = command.binary || command.name;
+
+    // Run command
+    msg.context.command = new Command(
+      reply,
+      msg.context,
+      command.arg ? `${binary} '${msg.args()}'` : binary
+    );
+
+    // Remove context
+    msg.context.command.on("exit", () => (msg.context.command = null));
+  });
 });
 
 // Signal sending
@@ -77,29 +125,8 @@ bot.command("cancel", "kill", function (msg, reply, next) {
   }
 });
 
-// Command start
-bot.command("run", function (msg, reply, next) {
-  var args = msg.args();
-  if (!args)
-    return reply.html("Use /run &lt;command&gt; to execute something.");
-
-  if (msg.context.command) {
-    var command = msg.context.command;
-    return reply.text("A command is already running.");
-  }
-
-  if (msg.editor) msg.editor.detach();
-  msg.editor = null;
-
-  console.log("Chat «%s»: running command «%s»", msg.chat.name, args);
-  msg.context.command = new Command(reply, msg.context, args);
-  msg.context.command.on("exit", function () {
-    msg.context.command = null;
-  });
-});
-
 // Status
-bot.command("status", function (msg, reply, next) {
+bot.command("status", function (msg, reply) {
   var content = "",
     context = msg.context;
 
@@ -111,92 +138,6 @@ bot.command("status", function (msg, reply, next) {
   reply.html(content);
 });
 
-// Welcome message
-bot.command("start", function (msg, reply, next) {
-  reply.html("👋 Salam aleikum habibi");
-});
-
-// Get
-bot.command("get", function (msg, reply, next) {
-  var args = msg.args();
-  if (!args)
-    return reply.html("Use /irc &lt;BOT&gt; &lt;PACK&gt; to download files.");
-
-  if (msg.context.command) {
-    var command = msg.context.command;
-    return reply.text("A command is already running.");
-  }
-
-  var args = "weeget '" + msg.args() + "'";
-  console.log("Chat «%s»: running WeeChat command «%s»", msg.chat.name, args);
-  msg.context.command = new Command(reply, msg.context, args);
-  msg.context.command.on("exit", function () {
-    msg.context.command = null;
-  });
-});
-
-// URL
-bot.command("url", function (msg, reply, next) {
-  var args = msg.args();
-  if (!args)
-    return reply.html("Use /url &lt;URL&gt; &lt;PACK&gt; to convert a URL.");
-
-  if (msg.context.command) {
-    var command = msg.context.command;
-    return reply.text("A command is already running.");
-  }
-
-  var args = "/home/dietpi/.local/bin/yt-dlp --get-url '" + msg.args() + "'";
-  console.log("Chat «%s»: running WeeChat command «%s»", msg.chat.name, args);
-  msg.context.command = new Command(reply, msg.context, args);
-  msg.context.command.on("exit", function () {
-    msg.context.command = null;
-  });
-});
-
-// Process
-bot.command("process", function (msg, reply, next) {
-  if (msg.context.command) {
-    var command = msg.context.command;
-    return reply.text("A command is already running.");
-  }
-
-  var args = "process";
-  msg.context.command = new Command(reply, msg.context, args);
-  msg.context.command.on("exit", function () {
-    msg.context.command = null;
-  });
-});
-
-// Upload
-bot.command("upload", function (msg, reply, next) {
-  if (msg.context.command) {
-    var command = msg.context.command;
-    return reply.text("A command is already running.");
-  }
-
-  var args = "upload";
-  msg.context.command = new Command(reply, msg.context, args);
-  msg.context.command.on("exit", function () {
-    msg.context.command = null;
-  });
-});
-
-// List
-bot.command("list", function (msg, reply, next) {
-  if (msg.context.command) {
-    var command = msg.context.command;
-    return reply.text("A command is already running.");
-  }
-
-  var args = "list";
-  msg.context.command = new Command(reply, msg.context, args);
-  msg.context.command.on("exit", function () {
-    msg.context.command = null;
-  });
-});
-
-// Help
 bot.command(function (msg, reply, next) {
   reply.reply(msg).text("Invalid command.");
 });

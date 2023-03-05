@@ -1,3 +1,5 @@
+
+r - Alias for /run or /enter
 run - Execute command
 enter - Send input lines to command
 type - Type keys into command
@@ -6,9 +8,6 @@ meta - Send the next typed key with Alt
 keypad - Toggle keypad for special keys
 redraw - Force the command to repaint
 end - Send EOF to command
-cancel - Interrupt command
-kill - Send signal to process
-status - View status and current settings
 cd - Change directory
 env - Manipulate the environment
 shell - Change shell used to run commands
@@ -19,4 +18,16 @@ setinteractive - Enable / disable shell interactive flag
 help - Get help
 file - View and edit small text files
 upload - Upload and overwrite raw files
-r - Alias for /run or /enter
+
+process - Get subtitles and rename
+upload - Transfer processed files
+list - List all files
+get - Download pack
+add - Whitelist show
+new - Show new items in library
+scan - Scan for new files
+url - Get video url
+status - View status and current settings
+kill - Send signal to process
+cancel - Interrupt command
+
