@@ -23,9 +23,11 @@ process - Get subtitles and rename
 upload - Transfer processed files
 list - List all files
 get - Download pack
+search - Search for pack
 add - Whitelist show
 new - Show new items in library
 scan - Scan for new files
+
 url - Get video url
 status - View status and current settings
 kill - Send signal to process
