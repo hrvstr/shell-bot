@@ -21,6 +21,7 @@ try {
 
 var bot = botgram(config.authToken, { agent: utils.createAgent() });
 var owner = config.owner;
+var user = config.user;
 var tokens = {};
 var granted = {};
 var contexts = {};
@@ -39,7 +40,7 @@ function rootHook(msg, reply, next) {
 
   var id = msg.chat.id;
 
-  var allowed = id === owner || granted[id];
+  var allowed = id === owner || user || granted[id];
 
   // If this message contains a token, check it
   if (!allowed && msg.command === "start" && Object.hasOwnProperty.call(tokens, msg.args())) {
