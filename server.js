@@ -183,6 +183,17 @@ bot.command("status", function (msg, reply, next) {
   if (!context.command) content += "No command running.\n\n";
   else content += "Command running, PID " + context.command.pty.pid + ".\n\n";
 
+  // Granted chats (msg.chat.id is intentional)
+  if (msg.chat.id === owner) {
+    var grantedIds = Object.keys(granted);
+    if (grantedIds.length) {
+      content += "\nGranted chats:\n";
+      content += grantedIds.map(function (id) { return id.toString(); }).join("\n");
+    } else {
+      content += "\nNo chats granted. Use /grant or /token to allow another chat to use the bot.";
+    }
+  }
+
   if (context.command) reply.reply(context.command.initialMessage.id);
   reply.html(content);
 });
