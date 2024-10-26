@@ -126,6 +126,10 @@ const commands = [
     arg: true,
     help: "Use /get &lt;RELEASE&gt; to search and download files.",
   },
+//  {
+//    name: "free",
+//    binary: `df -h | grep Router | awk "{print \$4, \$5}"`x
+//  },
 ];
 
 commands.forEach((command) => {
